@@ -1,16 +1,52 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import { LoggedContext } from "../../contexts/LoggedContext";
-
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const token = localStorage.getItem("token");
   const { auth, setAuth } = useContext(LoggedContext);
-
+  const nav = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/main", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          setLoading(false);
+          setAuth({ token: true });
+        } else {
+          setLoading(false);
+          console.log("Wrong token");
+          setAuth({ token: null });
+        }
+      } catch (error) {
+        console.error("Error fetching token:", error);
+        setLoading(false);
+        setAuth({ token: null });
+      }
+    };
+
+    if (token) {
+      setLoading(true);
+      fetchToken();
+    } else {
+      setLoading(false);
+      setAuth({ token: null });
+    }
+  }, [token, setAuth]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,6 +68,9 @@ const Login = () => {
       console.log("Wrong credentials");
     }
   };
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div

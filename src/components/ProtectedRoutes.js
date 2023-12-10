@@ -9,15 +9,6 @@ const ProtectedRoutes = () => {
   const nav = useNavigate();
   const token = localStorage.getItem("token");
 
-  const handleStorageChange = (event) => {
-    if (event.key === "token" && !event.newValue) {
-      // Token is removed in another tab/window
-      setAuth({ token: null });
-      setLoading(false);
-      nav("/login");
-    }
-  };
-
   useEffect(() => {
     const fetchToken = async () => {
       try {
@@ -51,15 +42,6 @@ const ProtectedRoutes = () => {
       setAuth({ token: null });
     }
   }, [token, setAuth]);
-
-  // useEffect(() => {
-  //   const handleStorage = () => {
-  //     console.log("changes");
-  //   };
-
-  //   window.addEventListener("storage", handleStorage());
-  //   return () => window.removeEventListener("storage", handleStorage());
-  // }, [token]);
 
   if (loading) {
     return <p>Loading...</p>;
