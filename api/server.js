@@ -30,3 +30,4 @@ app.use((err, req, res, next) => {
     message: statusCode === 500 ? "Internal Server Error" : message,
   });
 });
+module.exports = app;
