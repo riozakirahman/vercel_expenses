@@ -12,7 +12,7 @@ const ProtectedRoutes = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/main", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/main`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
