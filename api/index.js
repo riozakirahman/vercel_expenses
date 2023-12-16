@@ -12,10 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+mongoose.connect(process.env.MONGODB_URL);
+if (process.env.PORT) {
+  app.listen(process.env.PORT, () => {});
+}
 
-app.listen(process.env.PORT || 4000, () => {
-  mongoose.connect(process.env.MONGODB_URL);
-});
 app.get("/", (req, res) => {
   res.json("Hello from the backend");
 });
@@ -30,4 +31,5 @@ app.use((err, req, res, next) => {
     message: statusCode === 500 ? "Internal Server Error" : message,
   });
 });
+
 module.exports = app;
